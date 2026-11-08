@@ -1,0 +1,8 @@
+        print()
+        print("========= VOTING MENU =========")
+        print("1 - Show accounts")
+        print("2 - Add a voter (owner only)")
+        print("3 - Vote")
+        print("4 - Show results")
+        print("0 - Exit")
+        option = input("Choose an option: ")
