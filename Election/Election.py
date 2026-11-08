@@ -36,9 +36,22 @@ if not (len(sys.argv) > 1 and sys.argv[1] == "test"):
                     print(i, students[i], accounts[i], status)
 
             elif option == "2":
-                print("TODO: add a voter")
+                number = int(input("Your student number (0-9): "))
+                if voting.functions.hasVoted(accounts[number]).call():
+                    raise Exception(students[number] + " already voted!")
+                candidate = int(input("Choose a candidate (0 = Ken, 1 = Michael): "))
+                if candidate != 0 and candidate != 1:
+                    raise Exception(str(candidate) + " is not a candidate! Choose 0 = Ken or 1 = Michael.")
+                tx = voting.functions.vote(candidate).transact({"from": accounts[number]})
+                receipt = w3.eth.wait_for_transaction_receipt(tx)
+                print(students[number] + ", your vote was registered on the blockchain!")
+                print("Transaction:", w3.to_hex(tx))
+                print("Block:", receipt.blockNumber, "| Gas used:", receipt.gasUsed)
+
             elif option == "3":
-                print("TODO: vote")
+                print("Ken:", voting.functions.votes(0).call())
+                print("Michael:", voting.functions.votes(1).call())
+
             elif option == "4":
                 print("TODO: show results")
             elif option == "0":
@@ -46,4 +59,5 @@ if not (len(sys.argv) > 1 and sys.argv[1] == "test"):
                 break
             else:
                 print("Invalid option, try again.")
-
+        except Exception as e:
+            print("Error:", e)
