@@ -19,11 +19,11 @@ print("Contract deployed at:", address)
 if not (len(sys.argv) > 1 and sys.argv[1] == "test"):
     while True:
         print()
-        print("========= VOTING MENU =========")
-        print("1 - Show accounts")
-        print("2 - Add a voter (owner only)")
-        print("3 - Vote")
-        print("4 - Show results")
+        print("========= VOTING FOR CLASS LEADER =========")
+        print("============== KEN vs Michael =============")
+        print("1 - Show students")
+        print("2 - Vote")
+        print("3 - Show results")
         print("0 - Exit")
         option = input("Choose an option: ")
 
@@ -48,16 +48,37 @@ if not (len(sys.argv) > 1 and sys.argv[1] == "test"):
                 print("Transaction:", w3.to_hex(tx))
                 print("Block:", receipt.blockNumber, "| Gas used:", receipt.gasUsed)
 
+
             elif option == "3":
                 print("Ken:", voting.functions.votes(0).call())
                 print("Michael:", voting.functions.votes(1).call())
 
-            elif option == "4":
-                print("TODO: show results")
             elif option == "0":
-                print("Goodbye!")
+                print("Bye!")
                 break
+
             else:
-                print("Invalid option, try again.")
+                print("Invalid option.")
+
         except Exception as e:
             print("Error:", e)
+
+else:
+    voting.functions.vote(0).transact({"from": accounts[1]})
+    voting.functions.vote(1).transact({"from": accounts[2]})
+    voting.functions.vote(0).transact({"from": accounts[3]})
+    print("3 votes sent")
+
+    try:
+        voting.functions.vote(1).transact({"from": accounts[1]})
+    except Exception as e:
+        print("Test 1 - vote twice:", e)
+
+    try:
+        voting.functions.vote(2).transact({"from": accounts[4]})
+    except Exception as e:
+        print("Test 2 - invalid candidate:", e)
+
+    print("Results:")
+    print("Ken:", voting.functions.votes(0).call())
+    print("Michael:", voting.functions.votes(1).call())
